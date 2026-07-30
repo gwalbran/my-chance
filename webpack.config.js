@@ -9,7 +9,7 @@ module.exports = (env, argv) => {
       path: path.resolve(__dirname, 'dist'),
       filename: isProd ? '[name].[contenthash].js' : '[name].js',
       clean: true,
-      publicPath: '/',
+      publicPath: isProd ? 'auto' : '/',
     },
     resolve: {
       extensions: ['.tsx', '.ts', '.js'],
