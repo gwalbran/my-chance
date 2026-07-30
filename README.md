@@ -1,10 +1,12 @@
 # My Chance
 
-My Change lets you build and play games of chance.
+**[Play it live →](https://gwalbran.github.io/my-chance/)**
+
+My Chance lets you build and play games of chance.
 
 The game of chance is essentially a bucket of potential outcomes that you
 have assembled in a profile. On each play of the game the bucket is given
-a good shake and the next outcome it drawn.
+a good shake and the next outcome is drawn.
 
 ## Game play
 
@@ -25,13 +27,13 @@ Names must be unique.
 ### Description
 
 An optional description. You can use this to describe the intent of the game
-or anything less if you wish to.
+or whatever you like.
 
 ### Mode
 
 Controls how the game is played. Available modes are:
 
-- Roulette, works a bit like a casino roulette wheel. All outcome are available
+- Roulette, works a bit like a casino roulette wheel. All outcomes are available
   on each play of the game.
 - Bingo, once an outcome has been drawn then is it removed from play.
 
@@ -48,9 +50,9 @@ A name or label for this outcome. Is shown when drawn
 An optional description for the outcome. If set this is shown as a help type
 text when the outcome is drawn during gameplay.
 
-#### Occurences (default 1)
+#### Occurrences (default 1)
 
-The number of times an output is put into the bucket of outcomes at the start
+The number of times an outcome is put into the bucket of outcomes at the start
 of the game. Used to duplicate the outcome to increase the chance of it being
 drawn.
 
@@ -62,4 +64,14 @@ An optional image to show when the outcome is drawn.
 
 An optional sound to play when the outcome is drawn
 
+## Inspiration
 
+This game is inspired by my friend Tess who is a language therapist. She was
+telling me about a farting game she had used as a language therapist in the past
+and wanted to get a version of it.
+
+This also reminded me of the pain I'd suffered as a parent when all my young daughter
+wanted to do was play a Dora the Explorer bingo game. The painful part was the game
+came with a roulette style spinner that would always spin up outcomes we'd already seen.
+My Chance's Bingo mode solves exactly that — once an outcome is drawn it is removed from
+play, so every turn brings something new.
