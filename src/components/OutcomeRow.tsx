@@ -1,7 +1,7 @@
 import { Button, FormGroup, InputGroup, NumericInput, TextArea } from '@blueprintjs/core';
-import type { Outcome } from '../types';
+import type { MediaAsset, Outcome } from '../types';
+import { HelpTip } from './HelpTip';
 import { MediaInput } from './MediaInput';
-import type { MediaAsset } from '../types';
 
 interface Props {
   outcome: Outcome;
@@ -24,6 +24,7 @@ export function OutcomeRow({ outcome, onChange, onRemove, showError }: Props) {
       <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', flexWrap: 'wrap' }}>
         <FormGroup
           label="Label"
+          labelInfo={<HelpTip content="The name shown when this outcome is drawn." />}
           style={{ flex: '2 1 160px', marginBottom: 0 }}
           intent={showError && !outcome.label.trim() ? 'danger' : 'none'}
           helperText={showError && !outcome.label.trim() ? 'Required' : undefined}
@@ -36,7 +37,11 @@ export function OutcomeRow({ outcome, onChange, onRemove, showError }: Props) {
           />
         </FormGroup>
 
-        <FormGroup label="Description" style={{ flex: '3 1 200px', marginBottom: 0 }}>
+        <FormGroup
+          label="Description"
+          labelInfo={<HelpTip content="Optional. Shown as extra detail below the label when this outcome is drawn." />}
+          style={{ flex: '3 1 200px', marginBottom: 0 }}
+        >
           <TextArea
             value={outcome.description ?? ''}
             onChange={e => update({ description: e.target.value || undefined })}
@@ -46,7 +51,11 @@ export function OutcomeRow({ outcome, onChange, onRemove, showError }: Props) {
           />
         </FormGroup>
 
-        <FormGroup label="Occurrences" style={{ flex: '0 0 100px', marginBottom: 0 }}>
+        <FormGroup
+          label="Occurrences"
+          labelInfo={<HelpTip content="How many times this outcome goes into the bucket. An outcome with 3 occurrences is three times as likely to be drawn as one with 1." />}
+          style={{ flex: '0 0 120px', marginBottom: 0 }}
+        >
           <NumericInput
             value={outcome.occurrences}
             onValueChange={val => update({ occurrences: Math.max(1, Math.floor(val || 1)) })}
@@ -69,7 +78,9 @@ export function OutcomeRow({ outcome, onChange, onRemove, showError }: Props) {
 
       <div style={{ display: 'flex', gap: 24, marginTop: 8, flexWrap: 'wrap' }}>
         <div>
-          <span style={{ fontSize: 12, color: '#8a9ba8', marginRight: 8 }}>Image:</span>
+          <span style={{ fontSize: 12, color: '#8a9ba8', marginRight: 4 }}>Image</span>
+          <HelpTip content="Optional. Shown when this outcome is drawn." />
+          <span style={{ marginRight: 8 }}>:</span>
           <MediaInput
             type="image"
             value={outcome.image}
@@ -77,7 +88,9 @@ export function OutcomeRow({ outcome, onChange, onRemove, showError }: Props) {
           />
         </div>
         <div>
-          <span style={{ fontSize: 12, color: '#8a9ba8', marginRight: 8 }}>Sound:</span>
+          <span style={{ fontSize: 12, color: '#8a9ba8', marginRight: 4 }}>Sound</span>
+          <HelpTip content="Optional. Played when this outcome is drawn." />
+          <span style={{ marginRight: 8 }}>:</span>
           <MediaInput
             type="sound"
             value={outcome.sound}

@@ -12,6 +12,7 @@ import { put } from '../persistence/profileRepo';
 import { useStore } from '../state/store';
 import type { GameMode, Outcome, Profile } from '../types';
 import { showToast } from '../util/toaster';
+import { HelpTip } from './HelpTip';
 import { OutcomesEditor } from './OutcomesEditor';
 
 export function ProfileEditor() {
@@ -88,7 +89,7 @@ export function ProfileEditor() {
 
       <FormGroup
         label="Name"
-        labelInfo="(required)"
+        labelInfo={<span>(required) <HelpTip content="Shown on the profile list. Must be unique." /></span>}
         intent={submitted && nameError ? 'danger' : 'none'}
         helperText={submitted && nameError ? nameError : undefined}
       >
@@ -100,7 +101,7 @@ export function ProfileEditor() {
         />
       </FormGroup>
 
-      <FormGroup label="Description">
+      <FormGroup label="Description" labelInfo={<HelpTip content="Optional. Shown beneath the profile name on the profile list." />}>
         <TextArea
           value={description}
           onChange={e => setDescription(e.target.value)}
@@ -111,7 +112,7 @@ export function ProfileEditor() {
         />
       </FormGroup>
 
-      <FormGroup label="Mode">
+      <FormGroup label="Mode" labelInfo={<HelpTip content="Roulette: all outcomes are available on every draw, like spinning a wheel. Bingo: each outcome is removed once drawn — the game ends when the bucket is empty." />}>
         <HTMLSelect
           value={mode}
           onChange={e => setMode(e.target.value as GameMode)}
