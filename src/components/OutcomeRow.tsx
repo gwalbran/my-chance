@@ -1,7 +1,9 @@
-import { Button, FormGroup, InputGroup, NumericInput, TextArea } from '@blueprintjs/core';
+import { Button, Classes, Dialog, FormGroup, InputGroup, NumericInput, TextArea } from '@blueprintjs/core';
+import { useRef, useState } from 'react';
 import type { MediaAsset, Outcome } from '../types';
 import { HelpTip } from './HelpTip';
 import { MediaInput } from './MediaInput';
+import { OutcomeReveal } from './OutcomeReveal';
 
 interface Props {
   outcome: Outcome;
@@ -12,6 +14,24 @@ interface Props {
 
 export function OutcomeRow({ outcome, onChange, onRemove, showError }: Props) {
   const update = (patch: Partial<Outcome>) => onChange({ ...outcome, ...patch });
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const handlePreview = () => {
+    if (outcome.sound) {
+      const url = URL.createObjectURL(outcome.sound.blob);
+      const audio = new Audio(url);
+      audioRef.current = audio;
+      audio.play().catch(() => null).finally(() => URL.revokeObjectURL(url));
+    }
+    setPreviewOpen(true);
+  };
+
+  const handleClosePreview = () => {
+    audioRef.current?.pause();
+    audioRef.current = null;
+    setPreviewOpen(false);
+  };
 
   return (
     <div style={{
@@ -66,14 +86,21 @@ export function OutcomeRow({ outcome, onChange, onRemove, showError }: Props) {
           />
         </FormGroup>
 
-        <Button
-          minimal
-          icon="trash"
-          intent="danger"
-          style={{ marginTop: 22 }}
-          onClick={onRemove}
-          title="Remove outcome"
-        />
+        <div style={{ display: 'flex', gap: 4, marginTop: 22 }}>
+          <Button
+            minimal
+            icon="eye-open"
+            title="Preview outcome"
+            onClick={handlePreview}
+          />
+          <Button
+            minimal
+            icon="trash"
+            intent="danger"
+            title="Remove outcome"
+            onClick={onRemove}
+          />
+        </div>
       </div>
 
       <div style={{ display: 'flex', gap: 24, marginTop: 8, flexWrap: 'wrap' }}>
@@ -98,6 +125,22 @@ export function OutcomeRow({ outcome, onChange, onRemove, showError }: Props) {
           />
         </div>
       </div>
+
+      <Dialog
+        isOpen={previewOpen}
+        onClose={handleClosePreview}
+        title={`Preview — ${outcome.label || 'Untitled'}`}
+        style={{ width: 'auto', maxWidth: 540 }}
+      >
+        <div className={Classes.DIALOG_BODY}>
+          <OutcomeReveal outcome={outcome} />
+        </div>
+        <div className={Classes.DIALOG_FOOTER}>
+          <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+            <Button onClick={handleClosePreview}>Close</Button>
+          </div>
+        </div>
+      </Dialog>
     </div>
   );
 }
