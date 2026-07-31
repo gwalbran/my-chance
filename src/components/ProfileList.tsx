@@ -1,9 +1,41 @@
-import { Alert, Button, Card, Intent, NonIdealState, Tag } from '@blueprintjs/core';
+import { Alert, Button, Card, Intent, Menu, MenuItem, NonIdealState, Popover, Tag } from '@blueprintjs/core';
 import { useState } from 'react';
 import { deleteProfile } from '../persistence/profileRepo';
 import { useStore } from '../state/store';
 import type { Profile } from '../types';
 import { showToast } from '../util/toaster';
+
+function ProfileActions({ profile, onDelete }: { profile: Profile; onDelete: () => void }) {
+  const { dispatch } = useStore();
+
+  const menu = (
+    <Menu>
+      <MenuItem
+        icon="play"
+        text="Play"
+        intent="success"
+        onClick={() => dispatch({ type: 'NAVIGATE', view: { name: 'play', profileId: profile.id } })}
+      />
+      <MenuItem
+        icon="edit"
+        text="Edit"
+        onClick={() => dispatch({ type: 'NAVIGATE', view: { name: 'editor', profileId: profile.id } })}
+      />
+      <MenuItem
+        icon="trash"
+        text="Delete"
+        intent="danger"
+        onClick={onDelete}
+      />
+    </Menu>
+  );
+
+  return (
+    <Popover content={menu} placement="bottom-end">
+      <Button minimal icon="more" aria-label="Profile actions" />
+    </Popover>
+  );
+}
 
 export function ProfileList() {
   const { state, dispatch } = useStore();
@@ -48,10 +80,15 @@ export function ProfileList() {
       ) : (
         state.profiles.map((profile: Profile) => (
           <Card key={profile.id} style={{ marginBottom: 12 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-              <div style={{ flex: 1 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                  <strong>{profile.name}</strong>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', marginBottom: profile.description ? 4 : 0 }}>
+                  <button
+                    onClick={() => dispatch({ type: 'NAVIGATE', view: { name: 'play', profileId: profile.id } })}
+                    style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', color: 'inherit', font: 'inherit', fontWeight: 'bold', textAlign: 'left' }}
+                  >
+                    {profile.name}
+                  </button>
                   <Tag minimal intent={profile.mode === 'roulette' ? 'primary' : 'success'}>
                     {profile.mode === 'roulette' ? 'Roulette' : 'Bingo'}
                   </Tag>
@@ -61,28 +98,7 @@ export function ProfileList() {
                   <p style={{ margin: 0, color: '#888', fontSize: 13 }}>{profile.description}</p>
                 )}
               </div>
-              <div style={{ display: 'flex', gap: 4, marginLeft: 16 }}>
-                <Button
-                  minimal
-                  icon="play"
-                  intent="success"
-                  title="Play"
-                  onClick={() => dispatch({ type: 'NAVIGATE', view: { name: 'play', profileId: profile.id } })}
-                />
-                <Button
-                  minimal
-                  icon="edit"
-                  title="Edit"
-                  onClick={() => dispatch({ type: 'NAVIGATE', view: { name: 'editor', profileId: profile.id } })}
-                />
-                <Button
-                  minimal
-                  icon="trash"
-                  intent="danger"
-                  title="Delete"
-                  onClick={() => setDeletingId(profile.id)}
-                />
-              </div>
+              <ProfileActions profile={profile} onDelete={() => setDeletingId(profile.id)} />
             </div>
           </Card>
         ))
