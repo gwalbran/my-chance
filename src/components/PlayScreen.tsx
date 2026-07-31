@@ -40,6 +40,29 @@ function OutcomeReveal({ outcome }: { outcome: Outcome }) {
   );
 }
 
+function OutcomeFrame({ outcome, visible }: { outcome: Outcome; visible: boolean }) {
+  const imageUrl = useObjectUrl(outcome.image);
+
+  return (
+    <div style={{
+      position: 'absolute',
+      inset: 0,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 12,
+      opacity: visible ? 1 : 0,
+      transition: 'opacity 70ms ease-in-out',
+    }}>
+      {imageUrl && (
+        <img src={imageUrl} alt={outcome.label} style={{ maxWidth: '100%', maxHeight: 180, objectFit: 'contain', borderRadius: 6 }} />
+      )}
+      <H2 style={{ margin: 0, opacity: 0.85, fontStyle: imageUrl ? 'normal' : 'italic' }}>{outcome.label}</H2>
+    </div>
+  );
+}
+
 function AnimatingLabel({ outcomes }: { outcomes: Outcome[] }) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -50,11 +73,13 @@ function AnimatingLabel({ outcomes }: { outcomes: Outcome[] }) {
     return () => clearInterval(id);
   }, [outcomes]);
 
-  const label = outcomes[currentIndex]?.label ?? '…';
-
   return (
     <Card elevation={2} style={{ textAlign: 'center', padding: 32, maxWidth: 480, margin: '0 auto' }}>
-      <H2 style={{ margin: 0, opacity: 0.8, fontStyle: 'italic', minHeight: 40 }}>{label}</H2>
+      <div style={{ position: 'relative', height: 240 }}>
+        {outcomes.map((o, i) => (
+          <OutcomeFrame key={o.id} outcome={o} visible={i === currentIndex} />
+        ))}
+      </div>
       <ProgressBar intent="primary" stripes animate style={{ marginTop: 16 }} />
     </Card>
   );
